@@ -1,4 +1,4 @@
-require 'im-kayac/message'
+require 'im-kayac'
 
 module Pekostream
   module Notification
@@ -6,12 +6,11 @@ module Pekostream
       def initialize(username:, secret:, handler: nil)
         @notifier = ::ImKayac::Message.new
         @notifier.to(username).secret(secret)
-        @notifier.handler(handler) if handler
-        #ImKayac.to('ryopeko').secret(ENV['IMKAYAC_SECRET']).handler("twitter://status?id=422775613305270272").post(message)
+        @notifier.handler(handler)
       end
 
-      def notify(message)
-        @notifier.post(message)
+      def notify(message, handler: nil)
+        @notifier.handler(handler).post(message)
       end
     end
   end

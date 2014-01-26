@@ -1,5 +1,6 @@
-require "pekostream/notification/im_kayac"
+require "pekostream/stream/twitter"
 require "pekostream/version"
+require 'logger'
 require 'pry'
 
 
