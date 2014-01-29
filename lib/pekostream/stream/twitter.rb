@@ -27,12 +27,17 @@ module Pekostream
           tweet: ->(tweet){
             logger.info "#{tweet.user.screen_name}: #{tweet.text}"
 
-            return unless twitter_filter.filter(tweet.text)
-
-            notifier.notify(
-              "maybe mentioned from @#{tweet.user.screen_name}: #{tweet.text}",
-              handler: "twitter://status?id=#{tweet.id}"
-            )
+            if /^RT\s@ryopeko/ =~ tweet.text
+              notifier.notify(
+                "Retweeted by @#{tweet.user.screen_name}: #{tweet.text}",
+                handler: "twitter://status?id=#{tweet.id}"
+              )
+            elsif twitter_filter.filter(tweet.text)
+              notifier.notify(
+                "maybe mentioned from @#{tweet.user.screen_name}: #{tweet.text}",
+                handler: "twitter://status?id=#{tweet.id}"
+              )
+            end
           },
           favorite: ->(event){
             notifier.notify(
