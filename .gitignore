@@ -1,3 +1,4 @@
+.DS_Store
 *.gem
 *.rbc
 .bundle
@@ -16,5 +17,6 @@ test/tmp
 test/version_tmp
 tmp
 vendor/bundle
+images/*.png
 *~
 .env
