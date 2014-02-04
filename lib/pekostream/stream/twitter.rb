@@ -23,22 +23,9 @@ module Pekostream
           /りょう{,1}ぺこ/
         ])
 
-        uri_filter = Pekostream::Filter::Twitter.new([
-          'http://buzztter.com'
-        ])
-
         @hooks = {
           tweet: ->(tweet){
             logger.info "#{tweet.user.screen_name}: #{tweet.text}"
-
-            if tweet.entities? && tweet.urls?
-              tweet.urls.map(&:expanded_url).each do |uri|
-                logger.info "SKIP URI: #{uri}" and return if uri_filter.filter(uri.to_s)
-
-                logger.info "Enqueue URI: #{uri}"
-                UriWorker.perform_async(uri.to_s)
-              end
-            end
 
             if /^RT\s@ryopeko/ =~ tweet.text
               notifier.notify(
