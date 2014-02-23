@@ -21,7 +21,7 @@ class UriWorker
 
     begin
       visit uri
-      page.driver.save_screenshot '/Users/sekiguchi.ryoichi/dev/ruby/pekostream/images/' + file_name
+      page.driver.save_screenshot file_name
     rescue Capybara::Poltergeist::TimeoutError => e
       logger.warn e.message
     end
