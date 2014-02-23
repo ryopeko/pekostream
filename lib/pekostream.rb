@@ -1,4 +1,5 @@
 require "pekostream/stream/twitter"
+require "pekostream/stream/github"
 require "pekostream/version"
 require 'logger'
 require 'pry'

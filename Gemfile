@@ -4,6 +4,9 @@ gem 'twitter'
 gem 'get-twitter-oauth-token'
 gem 'dotenv'
 gem 'im-kayac'
+gem 'octokit'
+
+gem 'activesupport'
 
 gem 'sidekiq'
 
