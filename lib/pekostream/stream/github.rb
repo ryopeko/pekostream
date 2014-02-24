@@ -39,6 +39,8 @@ module Pekostream
               @logger.info payload.action
               pp event
             end
+          when :MemberEvent
+            @logger.info "#{event.actor.login} added #{payload.member.login} to #{event.repo.name} at #{created_at}"
           else
             @logger.info event.type
             pp event
