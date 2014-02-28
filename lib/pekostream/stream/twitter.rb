@@ -5,7 +5,9 @@ require 'pekostream/filter/twitter'
 module Pekostream
   module Stream
     class Twitter
-      def initialize(credentials, logger: Logger.new($stdout))
+      attr_reader :screen_name
+
+      def initialize(screen_name:, credentials:, logger: Logger.new($stdout))
         @client = ::Twitter::Streaming::Client.new do |config|
           config.consumer_key        = credentials[:consumer_key]
           config.consumer_secret     = credentials[:consumer_secret]
@@ -13,13 +15,15 @@ module Pekostream
           config.access_token_secret = credentials[:access_secret]
         end
 
+        @screen_name = screen_name
+
         notifier = Pekostream::Notification::ImKayac.new(
           username: 'ryopeko',
           secret: credentials[:im_kayac_secret]
         )
 
         twitter_filter = Pekostream::Filter::Twitter.new([
-          'ryopeko',
+          @screen_name,
           /りょう{,1}ぺこ/
         ])
 
@@ -27,7 +31,7 @@ module Pekostream
           tweet: ->(tweet){
             logger.info "#{tweet.user.screen_name}: #{tweet.text}"
 
-            if /^RT\s@ryopeko/ =~ tweet.text
+            if /^RT\s@#{@screen_name}/ =~ tweet.text
               notifier.notify(
                 "Retweeted by @#{tweet.user.screen_name}: #{tweet.text}",
                 handler: "twitter://status?id=#{tweet.id}"

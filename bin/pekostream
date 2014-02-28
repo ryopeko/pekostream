@@ -14,11 +14,14 @@ logger.info('Initialize Start')
 Dotenv.load Pathname('../../').expand_path(__FILE__).join('.env').to_s
 
 twitter_stream = Pekostream::Stream::Twitter.new(
-  consumer_key:    ENV['CONSUMER_KEY'],
-  consumer_secret: ENV['CONSUMER_SECRET'],
-  access_token:    ENV['ACCESS_TOKEN'],
-  access_secret:   ENV['ACCESS_SECRET'],
-  im_kayac_secret: ENV['IMKAYAC_SECRET']
+  screen_name: ENV['TWITTER_SCREEN_NAME'],
+  credentials: {
+    consumer_key:    ENV['CONSUMER_KEY'],
+    consumer_secret: ENV['CONSUMER_SECRET'],
+    access_token:    ENV['ACCESS_TOKEN'],
+    access_secret:   ENV['ACCESS_SECRET'],
+    im_kayac_secret: ENV['IMKAYAC_SECRET']
+  }
 )
 
 logger.info('Start: Twitter Stream')
