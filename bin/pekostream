@@ -4,6 +4,8 @@ require 'bundler/setup'
 require 'pekostream'
 require 'sidekiq'
 require 'dotenv'
+require 'octokit'
+require 'active_support/core_ext'
 
 logger = Logger.new(STDOUT)
 logger.level = Logger::DEBUG
@@ -11,7 +13,7 @@ logger.level = Logger::DEBUG
 logger.info('Initialize Start')
 Dotenv.load Pathname('../../').expand_path(__FILE__).join('.env').to_s
 
-stream = Pekostream::Stream::Twitter.new(
+twitter_stream = Pekostream::Stream::Twitter.new(
   consumer_key:    ENV['CONSUMER_KEY'],
   consumer_secret: ENV['CONSUMER_SECRET'],
   access_token:    ENV['ACCESS_TOKEN'],
@@ -20,7 +22,14 @@ stream = Pekostream::Stream::Twitter.new(
 )
 
 logger.info('Start: Twitter Stream')
-stream.start
+twitter_stream_thread = Thread.new { twitter_stream.start }
 
+logger.info('Start github stream')
 
+github_stream = Pekostream::Stream::Github.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
 
+loop do
+  github_stream.run
+  logger.info('sleeping')
+  sleep 600
+end
