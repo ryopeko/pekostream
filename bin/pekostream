@@ -7,10 +7,7 @@ require 'dotenv'
 require 'octokit'
 require 'active_support/core_ext'
 
-logger = Logger.new(STDOUT)
-logger.level = Logger::DEBUG
-
-logger.info('Initialize Start')
+infof('Initialize Start')
 Dotenv.load Pathname('../../').expand_path(__FILE__).join('.env').to_s
 
 twitter_stream = Pekostream::Stream::Twitter.new(
@@ -21,18 +18,19 @@ twitter_stream = Pekostream::Stream::Twitter.new(
     access_token:    ENV['ACCESS_TOKEN'],
     access_secret:   ENV['ACCESS_SECRET'],
     im_kayac_secret: ENV['IMKAYAC_SECRET']
-  }
+  },
+  logger: logger
 )
 
-logger.info('Start: Twitter Stream')
+infof('Start: Twitter Stream')
 twitter_stream_thread = Thread.new { twitter_stream.start }
 
-logger.info('Start github stream')
+infof('Start github stream')
 
 github_stream = Pekostream::Stream::Github.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
 
 loop do
   github_stream.run
-  logger.info('sleeping')
+  infof('sleeping')
   sleep 600
 end

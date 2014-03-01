@@ -6,6 +6,8 @@ gem 'dotenv'
 gem 'im-kayac'
 gem 'octokit'
 
+gem 'log_minimal'
+
 gem 'activesupport'
 
 gem 'sidekiq'
