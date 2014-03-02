@@ -44,6 +44,7 @@ module Pekostream
             end
           },
           favorite: ->(event){
+            return if event.source.screen_name == @screen_name
             notifier.notify(
               "#{event.name} from #{event.source.screen_name}: #{event.target_object.text}",
               handler: "twitter://status?id=#{event.target_object.id}"
