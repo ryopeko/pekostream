@@ -30,6 +30,10 @@ module Pekostream
               infof payload.ref_type
               pp event
             end
+          when :IssuesEvent
+            infof "#{event.actor.login} #{payload.action} issue #{event.repo.name}##{payload.issue.number}"
+          when :IssueCommentEvent
+            infof "#{event.actor.login} commented on issue #{event.repo.name}##{payload.issue.number}"
           when :GistEvent
             case payload.action.to_sym
             when :create
