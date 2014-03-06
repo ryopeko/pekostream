@@ -1,0 +1,16 @@
+twitter:
+  consumer_key:
+  consumer_secret:
+  users:
+    -
+        screen_name: user1
+        access_token:
+        access_secret:
+    -
+        screen_name: user2
+        access_token:
+        access_secret:
+imkayac:
+  secret:
+github:
+  access_token:

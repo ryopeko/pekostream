@@ -7,7 +7,7 @@ module Pekostream
     class Twitter
       attr_reader :screen_name
 
-      def initialize(screen_name:, credentials:, logger: logger)
+      def initialize(screen_name:, credentials:)
         @client = ::Twitter::Streaming::Client.new do |config|
           config.consumer_key        = credentials[:consumer_key]
           config.consumer_secret     = credentials[:consumer_secret]
@@ -29,7 +29,7 @@ module Pekostream
 
         @hooks = {
           tweet: ->(tweet){
-            logger.infof "#{tweet.user.screen_name}: #{tweet.text}"
+            infof "#{tweet.user.screen_name}: #{tweet.text}"
 
             if /^RT\s@#{@screen_name}/ =~ tweet.text
               notifier.notify(
@@ -57,8 +57,6 @@ module Pekostream
             )
           }
         }
-
-        @logger = logger
       end
 
       def start
@@ -71,7 +69,7 @@ module Pekostream
               @hooks[object.name].call(object)
             end
           else
-            @logger.infof object.class
+            infof object.class
           end
         end
       end

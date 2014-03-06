@@ -4,7 +4,7 @@ require 'octokit'
 module Pekostream
   module Stream
     class Github
-      def initialize(access_token:, default_checked_at: 60.minutes.ago, logger: logger)
+      def initialize(access_token:, default_checked_at: 60.minutes.ago)
         @client          = Octokit::Client.new access_token: access_token
 
         @last_checked_at = default_checked_at

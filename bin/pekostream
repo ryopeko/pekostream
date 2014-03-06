@@ -1,36 +1,10 @@
 #!/usr/bin/env ruby
 
-require 'bundler/setup'
-require 'pekostream'
-require 'sidekiq'
-require 'dotenv'
-require 'octokit'
-require 'active_support/core_ext'
+require 'pekostream/cli'
+require 'log_minimal'
 
-infof('Initialize Start')
-Dotenv.load Pathname('../../').expand_path(__FILE__).join('.env').to_s
+include LogMinimal::Methods
+LogMinimal::Configuration.path = $stdout
 
-twitter_stream = Pekostream::Stream::Twitter.new(
-  screen_name: ENV['TWITTER_SCREEN_NAME'],
-  credentials: {
-    consumer_key:    ENV['CONSUMER_KEY'],
-    consumer_secret: ENV['CONSUMER_SECRET'],
-    access_token:    ENV['ACCESS_TOKEN'],
-    access_secret:   ENV['ACCESS_SECRET'],
-    im_kayac_secret: ENV['IMKAYAC_SECRET']
-  },
-  logger: logger
-)
+Pekostream::CLI.new(ARGV).run
 
-infof('Start: Twitter Stream')
-twitter_stream_thread = Thread.new { twitter_stream.start }
-
-infof('Start github stream')
-
-github_stream = Pekostream::Stream::Github.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
-
-loop do
-  github_stream.run
-  infof('sleeping')
-  sleep 600
-end
