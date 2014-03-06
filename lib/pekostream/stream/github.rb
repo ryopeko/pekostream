@@ -38,6 +38,8 @@ module Pekostream
             case payload.action.to_sym
             when :create
               infof "#{event.actor.login} created gist #{payload.gist.id} at #{created_at}"
+            when :update
+              infof "#{event.actor.login} updated gist #{payload.gist.id} at #{created_at}"
             else
               infof payload.action
               pp event
