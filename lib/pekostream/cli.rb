@@ -1,12 +1,13 @@
 require 'pekostream/configurable'
 require 'pekostream/stream/twitter'
 require 'pekostream/stream/github'
+require 'optparse'
 
 module Pekostream
   class CLI
     def initialize(args)
-      config_file_path = 'config.yaml'
-      @config = Pekostream::Configurable.new(config: config_file_path)
+      option_parse(args)
+      @config = Pekostream::Configurable.new(@options)
     end
 
     def run
@@ -34,6 +35,17 @@ module Pekostream
         infof('sleeping')
         sleep 600
       end
+    end
+
+    private def option_parse(args)
+      return @options if @options
+
+      @options = { config: 'config.yaml' }
+      OptionParser.new do |opt|
+        opt.on('--config VALUE') do |v|
+          @options[:config] = v
+        end
+      end.parse!(args)
     end
   end
 end
