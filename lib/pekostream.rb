@@ -1,7 +1,5 @@
-require 'log_minimal'
 require "pekostream/version"
-require 'sidekiq'
 
-$:.unshift(File.dirname(__FILE__) + '/../workers')
+module Pekostream
+end
 
-LogMinimal::Configuration.path = $stdout
