@@ -47,6 +47,8 @@ module Pekostream
             end
           when :MemberEvent
             infof "#{event.actor.login} added #{payload.member.login} to #{event.repo.name} at #{created_at}"
+          when :PublicEvent
+            infof "#{event.actor.login} open sourced #{event.repo.name} at #{created_at}"
           else
             infof event.type
             pp event
