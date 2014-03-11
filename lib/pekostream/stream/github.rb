@@ -54,6 +54,8 @@ module Pekostream
             infof "#{event.actor.login} pushed to #{branch_name} at #{event.repo.name} #{created_at}"
           when :PullRequestEvent
             infof "#{event.actor.login} #{payload.action} #{event.repo.name}##{payload.pull_request.number} #{created_at}"
+          when :DeleteEvent
+            infof "#{event.actor.login} deleted #{payload.ref_type} #{payload.ref} #{event.repo.name} at #{created_at}"
           else
             infof event.type
             pp event
