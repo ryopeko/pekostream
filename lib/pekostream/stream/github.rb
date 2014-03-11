@@ -52,6 +52,8 @@ module Pekostream
           when :PushEvent
             branch_name = payload.ref.match(/refs\/heads\/(.+)$/)[1]
             infof "#{event.actor.login} pushed to #{branch_name} at #{event.repo.name} #{created_at}"
+          when :PullRequestEvent
+            infof "#{event.actor.login} #{payload.action} #{event.repo.name}##{payload.pull_request.number} #{created_at}"
           else
             infof event.type
             pp event
