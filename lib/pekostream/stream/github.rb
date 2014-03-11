@@ -49,6 +49,9 @@ module Pekostream
             infof "#{event.actor.login} added #{payload.member.login} to #{event.repo.name} at #{created_at}"
           when :PublicEvent
             infof "#{event.actor.login} open sourced #{event.repo.name} at #{created_at}"
+          when :PushEvent
+            branch_name = payload.ref.match(/refs\/heads\/(.+)$/)[1]
+            infof "#{event.actor.login} pushed to #{branch_name} at #{event.repo.name} #{created_at}"
           else
             infof event.type
             pp event
