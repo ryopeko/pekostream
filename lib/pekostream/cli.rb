@@ -14,6 +14,7 @@ module Pekostream
       twitter_streams = @config.twitter['users'].map do |user|
         twitter_stream = Pekostream::Stream::Twitter.new(
           screen_name: user['screen_name'],
+          notification_words: user['notification_words'],
           credentials: {
             consumer_key:    @config.twitter['consumer_key'],
             consumer_secret: @config.twitter['consumer_secret'],

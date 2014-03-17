@@ -7,7 +7,7 @@ module Pekostream
     class Twitter
       attr_reader :screen_name
 
-      def initialize(screen_name:, credentials:)
+      def initialize(screen_name:, notification_words:[], credentials:)
         @client = ::Twitter::Streaming::Client.new do |config|
           config.consumer_key        = credentials[:consumer_key]
           config.consumer_secret     = credentials[:consumer_secret]
@@ -22,10 +22,7 @@ module Pekostream
           secret: credentials[:im_kayac_secret]
         )
 
-        twitter_filter = Pekostream::Filter::Twitter.new([
-          @screen_name,
-          /りょう{,1}ぺこ/
-        ])
+        twitter_filter = Pekostream::Filter::Twitter.new(notification_words)
 
         @hooks = {
           tweet: ->(tweet){

@@ -6,6 +6,9 @@ twitter:
         screen_name: user1
         access_token:
         access_secret:
+        notification_words:
+          - word1
+          - word\d+
     -
         screen_name: user2
         access_token:
