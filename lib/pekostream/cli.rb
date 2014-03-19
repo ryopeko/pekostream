@@ -19,9 +19,12 @@ module Pekostream
             consumer_key:    @config.twitter['consumer_key'],
             consumer_secret: @config.twitter['consumer_secret'],
             access_token:    user['access_token'],
-            access_secret:   user['access_secret'],
-            im_kayac_secret: @config.imkayac['secret']
+            access_secret:   user['access_secret']
           },
+          imkayac_config: {
+            username: @config.imkayac['username'],
+            secret: @config.imkayac['secret']
+          }
         )
       end
 
