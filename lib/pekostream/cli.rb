@@ -36,7 +36,6 @@ module Pekostream
 
       loop do
         github_stream.run
-        infof('sleeping')
         sleep 600
       end
     end

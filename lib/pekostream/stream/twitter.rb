@@ -1,11 +1,14 @@
 require 'twitter'
 require 'pekostream/notification/im_kayac'
 require 'pekostream/filter/twitter'
+require 'pekostream/stream/base'
 
 module Pekostream
   module Stream
-    class Twitter
+    class Twitter < Pekostream::Stream::Base
       attr_reader :screen_name
+
+      @@stream_type = 'twitter'
 
       def initialize(screen_name:, notification_words:[], credentials:, imkayac_config:)
         @client = ::Twitter::Streaming::Client.new do |config|
@@ -26,7 +29,7 @@ module Pekostream
 
         @hooks = {
           tweet: ->(tweet){
-            infof "#{tweet.user.screen_name}: #{tweet.text}"
+            output_tweet "#{tweet.user.screen_name}: #{tweet.text}"
 
             if /^RT\s@#{@screen_name}/ =~ tweet.text
               notifier.notify(
@@ -69,6 +72,10 @@ module Pekostream
             infof object.class
           end
         end
+      end
+
+      private def output_tweet(text)
+        output @@stream_type, "[#{@screen_name}] #{text}"
       end
     end
   end
