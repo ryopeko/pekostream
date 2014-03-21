@@ -29,7 +29,7 @@ module Pekostream
 
         @hooks = {
           tweet: ->(tweet){
-            output_tweet "#{tweet.user.screen_name}: #{tweet.text}"
+            output "#{tweet.user.screen_name}: #{tweet.text}"
 
             if /^RT\s@#{@screen_name}/ =~ tweet.text
               notifier.notify(
@@ -74,8 +74,8 @@ module Pekostream
         end
       end
 
-      private def output_tweet(text)
-        output @@stream_type, "[#{@screen_name}] #{text}"
+      private def output(text)
+        super @@stream_type, "[#{@screen_name}] #{text}"
       end
     end
   end
