@@ -17,8 +17,10 @@ module Pekostream
       def run
         @client.received_events('ryopeko').each do |event|
           created_at = event.created_at.in_time_zone('Asia/Tokyo')
-
-          output('skipped..') and break if created_at < @last_checked_at
+          if created_at < @last_checked_at
+            output('skipped..')
+            break
+          end
 
           payload = event.payload
           case event.type.to_sym

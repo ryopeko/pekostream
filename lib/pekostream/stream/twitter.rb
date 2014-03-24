@@ -29,7 +29,7 @@ module Pekostream
 
         @hooks = {
           tweet: ->(tweet){
-            output "#{tweet.user.screen_name}: #{tweet.text}"
+            output "#{tweet.user.screen_name}: #{tweet.text} #{tweet.created_at}"
 
             if /^RT\s@#{@screen_name}/ =~ tweet.text
               notifier.notify(
@@ -68,8 +68,6 @@ module Pekostream
             unless @hooks[object.name].nil?
               @hooks[object.name].call(object)
             end
-          else
-            infof object.class
           end
         end
       end

@@ -1,9 +1,8 @@
-require 'pry'
 module Pekostream
   module Stream
     class Base
       private def output(type, text)
-        infof "[#{type}] #{text}"
+        puts "[#{type}] #{text}"
       end
     end
   end
