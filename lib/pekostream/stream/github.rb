@@ -70,6 +70,15 @@ module Pekostream
         @last_checked_at = Time.now
       end
 
+      def start
+        @thread = Thread.new do
+          loop do
+            self.run
+            sleep 600
+          end
+        end
+      end
+
       private def output(text)
         super @@stream_type, text
       end

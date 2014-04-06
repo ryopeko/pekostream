@@ -28,15 +28,16 @@ module Pekostream
         )
       end
 
-      twitter_streams.each do |stream|
-        Thread.new { stream.start }
-      end
+      twitter_streams.each(&:start)
 
       github_stream = Pekostream::Stream::Github.new(access_token: @config.github['access_token'])
+      github_stream.start
 
       loop do
-        github_stream.run
-        sleep 600
+        twitter_streams.each do |stream|
+          stream.reconnect unless stream.alive?
+        end
+        sleep 300
       end
     end
 
