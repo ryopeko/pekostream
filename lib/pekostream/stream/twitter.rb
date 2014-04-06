@@ -83,7 +83,7 @@ module Pekostream
       end
 
       def alive?
-        Time.now - @last_received_at) < TWEET_INTERVAL_THRESHOLD
+        Time.now - @last_received_at < TWEET_INTERVAL_THRESHOLD
       end
 
       def stop
