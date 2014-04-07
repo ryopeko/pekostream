@@ -28,14 +28,12 @@ module Pekostream
         )
 
         twitter_filter = Pekostream::Filter::Twitter.new(notification_words)
-        colors = (31..36).to_a + (91..96).to_a
 
         @hooks = {
           tweet: ->(tweet){
             screen_name = tweet.user.screen_name
-            colorlized = "\e[#{colors[screen_name.delete('_').to_i(36) % colors.size]}m#{screen_name}\e[0m"
 
-            output "#{colorlized}: #{tweet.text} #{tweet.created_at}"
+            output "#{screen_name.colorlize}: #{tweet.text} #{tweet.created_at}"
 
             if /^RT\s@#{@screen_name}/ =~ tweet.text
               @notifier.notify(
@@ -109,7 +107,7 @@ module Pekostream
       end
 
       private def output(text)
-        super @@stream_type, "[#{@screen_name}] #{text}"
+        super @@stream_type, "[#{@screen_name.colorlize}] #{text}"
       end
     end
   end
