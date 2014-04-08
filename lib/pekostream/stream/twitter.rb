@@ -33,34 +33,43 @@ module Pekostream
           tweet: ->(tweet){
             screen_name = tweet.user.screen_name
 
-            output "#{screen_name.colorlize}: #{tweet.text} #{tweet.created_at}"
-
+            prefix = ''
             if /^RT\s@#{@screen_name}/ =~ tweet.text
+              prefix = "Retweeted by "
               @notifier.notify(
-                "Retweeted by @#{tweet.user.screen_name}: #{tweet.text}",
+                "#{prefix}@#{screen_name}: #{tweet.text}",
                 handler: "twitter://status?id=#{tweet.id}"
               )
             elsif twitter_filter.filter(tweet.text)
+              prefix = "maybe mentioned from "
               @notifier.notify(
-                "maybe mentioned from @#{tweet.user.screen_name}: #{tweet.text}",
+                "#{prefix}@#{screen_name}: #{tweet.text}",
                 handler: "twitter://status?id=#{tweet.id}"
               )
             end
+
+            output "#{screen_name.colorlize}: #{tweet.text} #{tweet.created_at}", prefix: prefix
 
             @last_received_at = tweet.created_at
           },
           favorite: ->(event){
             return if event.source.screen_name == @screen_name
+            prefix = "#{event.name} from "
+            text = "#{event.source.screen_name}: #{event.target_object.text}"
             @notifier.notify(
-              "#{event.name} from #{event.source.screen_name}: #{event.target_object.text}",
+              "#{prefix}#{text}",
               handler: "twitter://status?id=#{event.target_object.id}"
             )
+            output text, prefix: prefix
           },
           follow: ->(target){
+            prefix = "#{target.name} from "
+            text = target.source.screen_name
             @notifier.notify(
-              "#{target.name} from #{target.source.screen_name}",
+              "#{prefix}#{text}",
               handler: "twitter://user?id=#{target.source.id}"
             )
+            output text, prefix: prefix
           }
         }
       end
@@ -106,8 +115,8 @@ module Pekostream
         @thread
       end
 
-      private def output(text)
-        super @@stream_type, "[#{@screen_name.colorlize}] #{text}"
+      private def output(text, prefix: '')
+        super @@stream_type, "[#{@screen_name.colorlize}] #{prefix.bg_colorlize}#{text}"
       end
     end
   end
