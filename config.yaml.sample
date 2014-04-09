@@ -17,4 +17,5 @@ imkayac:
   username:
   secret:
 github:
+  username:
   access_token:

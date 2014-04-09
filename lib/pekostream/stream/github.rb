@@ -8,14 +8,15 @@ module Pekostream
     class Github < Pekostream::Stream::Base
       @@stream_type = 'github'
 
-      def initialize(access_token:, default_checked_at: 60.minutes.ago)
-        @client          = Octokit::Client.new access_token: access_token
+      def initialize(username:, access_token:, default_checked_at: 60.minutes.ago)
+        @client = Octokit::Client.new access_token: access_token
 
+        @username = username
         @last_checked_at = default_checked_at
       end
 
       def run
-        @client.received_events('ryopeko').each do |event|
+        @client.received_events(@username).each do |event|
           created_at = event.created_at.in_time_zone('Asia/Tokyo')
 
           if created_at < @last_checked_at
