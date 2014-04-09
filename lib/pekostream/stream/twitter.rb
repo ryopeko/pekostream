@@ -76,19 +76,15 @@ module Pekostream
 
       def start
         @thread = Thread.new do
-          begin
-            @client.user do |object|
-              case object
-              when ::Twitter::Tweet
-                @hooks[:tweet].call(object)
-              when ::Twitter::Streaming::Event
-                unless @hooks[object.name].nil?
-                  @hooks[object.name].call(object)
-                end
+          @client.user do |object|
+            case object
+            when ::Twitter::Tweet
+              @hooks[:tweet].call(object)
+            when ::Twitter::Streaming::Event
+              unless @hooks[object.name].nil?
+                @hooks[object.name].call(object)
               end
             end
-          ensure
-            puts "killed #{@screen_name}'s twitter user stream thread"
           end
         end
       end
