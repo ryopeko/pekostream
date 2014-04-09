@@ -1,7 +1,7 @@
 class String
   def colorlize(color_number=nil)
     colors = (31..36).to_a + (91..96).to_a
-    unless colors_number.nil?
+    if color_number.nil?
       color_number = colors[self.delete('_').to_i(36) % colors.size]
     end
 
