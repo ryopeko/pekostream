@@ -34,50 +34,52 @@ module Pekostream
           actor     = event.actor.login.colorlize
           repo_name = event.repo.name
 
-          case event.type.to_sym
-          when :WatchEvent
-            output "#{actor} starred #{repo_name} at #{created_at}"
-          when :ForkEvent
-            output "#{actor} forked #{repo_name} at #{created_at}"
-          when :CreateEvent
-            case payload.ref_type.to_sym
-            when :repository
-              output "#{actor} created repository #{repo_name} at #{created_at}"
-            else
-              output payload.ref_type
-              pp event
-            end
-          when :IssuesEvent
-            output "#{actor} #{payload.action} issue #{repo_name}##{payload.issue.number}"
-          when :IssueCommentEvent
-            output "#{actor} commented on issue #{repo_name}##{payload.issue.number}"
-          when :GistEvent
-            gist_id = payload.gist.id
+          text = case event.type.to_sym
+                 when :WatchEvent
+                   "starred #{repo_name} at #{created_at}"
+                 when :ForkEvent
+                   "forked #{repo_name} at #{created_at}"
+                 when :CreateEvent
+                   case payload.ref_type.to_sym
+                   when :repository
+                     "created repository #{repo_name} at #{created_at}"
+                   else
+                     pp event
+                     payload.ref_type
+                   end
+                 when :IssuesEvent
+                   "#{payload.action} issue #{repo_name}##{payload.issue.number}"
+                 when :IssueCommentEvent
+                   "commented on issue #{repo_name}##{payload.issue.number}"
+                 when :GistEvent
+                   gist_id = payload.gist.id
 
-            case payload.action.to_sym
-            when :create
-              output "#{actor} created gist #{gist_id} at #{created_at}"
-            when :update
-              output "#{actor} updated gist #{gist_id} at #{created_at}"
-            else
-              output payload.action
-              pp event
-            end
-          when :MemberEvent
-            output "#{actor} added #{payload.member.login} to #{repo_name} at #{created_at}"
-          when :PublicEvent
-            output "#{actor} open sourced #{repo_name} at #{created_at}"
-          when :PushEvent
-            branch_name = payload.ref.match(/refs\/heads\/(.+)$/)[1]
-            output "#{actor} pushed to #{branch_name} at #{repo_name} #{created_at}"
-          when :PullRequestEvent
-            output "#{actor} #{payload.action} #{repo_name}##{payload.pull_request.number} #{created_at}"
-          when :DeleteEvent
-            output "#{actor} deleted #{payload.ref_type} #{payload.ref} #{repo_name} at #{created_at}"
-          else
-            output event.type
-            pp event
-          end
+                   case payload.action.to_sym
+                   when :create
+                     "created gist #{gist_id} at #{created_at}"
+                   when :update
+                     "updated gist #{gist_id} at #{created_at}"
+                   else
+                     pp event
+                     payload.action
+                   end
+                 when :MemberEvent
+                   "added #{payload.member.login} to #{repo_name} at #{created_at}"
+                 when :PublicEvent
+                   "open sourced #{repo_name} at #{created_at}"
+                 when :PushEvent
+                   branch_name = payload.ref.match(/refs\/heads\/(.+)$/)[1]
+                   "pushed to #{branch_name} at #{repo_name} #{created_at}"
+                 when :PullRequestEvent
+                   "#{payload.action} #{repo_name}##{payload.pull_request.number} #{created_at}"
+                 when :DeleteEvent
+                   "deleted #{payload.ref_type} #{payload.ref} #{repo_name} at #{created_at}"
+                 else
+                   pp event
+                   event.type
+                 end
+
+          output "#{actor} #{text}"
         end
 
         @last_checked_at = Time.now
