@@ -8,7 +8,7 @@ module Pekostream
     class Github < Pekostream::Stream::Base
       @@stream_type = 'github'
 
-      attr_accessor :username, :access_token
+      attr_accessor :username, :access_token, :last_checked_at
 
       def initialize(options={})
         options.each do |key, value|
