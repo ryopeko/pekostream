@@ -8,11 +8,17 @@ module Pekostream
     class Github < Pekostream::Stream::Base
       @@stream_type = 'github'
 
-      def initialize(username:, access_token:, default_checked_at: 60.minutes.ago)
-        @client = Octokit::Client.new access_token: access_token
+      attr_accessor :username, :access_token
 
-        @username = username
-        @last_checked_at = default_checked_at
+      def initialize(options={})
+        options.each do |key, value|
+          send(:"#{key}=", value)
+        end
+
+        yield self if block_given?
+
+        @client = Octokit::Client.new access_token: @access_token
+        @last_checked_at ||= 60.minutes.ago
       end
 
       def run

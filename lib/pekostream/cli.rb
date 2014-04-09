@@ -30,10 +30,10 @@ module Pekostream
 
       twitter_streams.each(&:start)
 
-      github_stream = Pekostream::Stream::Github.new(
-        username: @config.github['username'],
-        access_token: @config.github['access_token']
-      )
+      github_stream = Pekostream::Stream::Github.new do |config|
+        config.username     = @config.github['username']
+        config.access_token = @config.github['access_token']
+      end
       github_stream.start
 
       loop do
