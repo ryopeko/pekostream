@@ -54,8 +54,8 @@ module Pekostream
           },
           favorite: ->(event){
             return if event.source.screen_name == @screen_name
-            prefix = "#{event.name} from "
-            text = "#{event.source.screen_name}: #{event.target_object.text}"
+            prefix = event.name
+            text = " from #{event.source.screen_name}: #{event.target_object.text}"
             @notifier.notify(
               "#{prefix}#{text}",
               handler: "twitter://status?id=#{event.target_object.id}"
@@ -63,8 +63,8 @@ module Pekostream
             output text, prefix: prefix
           },
           follow: ->(target){
-            prefix = "#{target.name} from "
-            text = target.source.screen_name
+            prefix = "#{target.name}"
+            text = " from #{target.source.screen_name}"
             @notifier.notify(
               "#{prefix}#{text}",
               handler: "twitter://user?id=#{target.source.id}"
