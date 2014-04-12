@@ -1,6 +1,7 @@
 require 'pekostream/configurable'
 require 'pekostream/stream/twitter'
 require 'pekostream/stream/github'
+require 'im-kayac'
 require 'optparse'
 
 module Pekostream
@@ -8,6 +9,13 @@ module Pekostream
     def initialize(args)
       option_parse(args)
       @config = Pekostream::Configurable.new(@options)
+      @notifier = ImKayac::Message.new \
+                                  .to(@config.imkayac['username']) \
+                                  .secret(@config.imkayac['secret'])
+    end
+
+    def notify(message, handler=nil)
+      @notifier.handler(handler).post(message)
     end
 
     def run
@@ -25,7 +33,9 @@ module Pekostream
             username: @config.imkayac['username'],
             secret: @config.imkayac['secret']
           }
-        )
+        ).tap do |stream|
+          stream.event(:notify, method(:notify))
+        end
       end
 
       twitter_streams.each(&:start)

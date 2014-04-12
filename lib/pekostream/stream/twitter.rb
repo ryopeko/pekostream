@@ -1,5 +1,4 @@
 require 'twitter'
-require 'pekostream/notification/im_kayac'
 require 'pekostream/filter/twitter'
 require 'pekostream/stream/base'
 
@@ -22,11 +21,6 @@ module Pekostream
         @screen_name = screen_name
         @last_received_at = Time.now
 
-        @notifier = Pekostream::Notification::ImKayac.new(
-          username: imkayac_config[:username],
-          secret: imkayac_config[:secret]
-        )
-
         twitter_filter = Pekostream::Filter::Twitter.new(notification_words)
 
         @hooks = {
@@ -36,15 +30,15 @@ module Pekostream
             prefix = ''
             if /^RT\s@#{@screen_name}/ =~ tweet.text
               prefix = "Retweeted by "
-              @notifier.notify(
+              invoke(:notify,
                 "#{prefix}@#{screen_name}: #{tweet.text}",
-                handler: "twitter://status?id=#{tweet.id}"
+                "twitter://status?id=#{tweet.id}"
               )
             elsif twitter_filter.filter(tweet.text)
               prefix = "maybe mentioned from "
-              @notifier.notify(
+              invoke(:notify,
                 "#{prefix}@#{screen_name}: #{tweet.text}",
-                handler: "twitter://status?id=#{tweet.id}"
+                "twitter://status?id=#{tweet.id}"
               )
             end
 
@@ -56,18 +50,18 @@ module Pekostream
             return if event.source.screen_name == @screen_name
             prefix = event.name.to_s
             text = " from #{event.source.screen_name}: #{event.target_object.text}"
-            @notifier.notify(
+            invoke(:notify,
               "#{prefix}#{text}",
-              handler: "twitter://status?id=#{event.target_object.id}"
+              "twitter://status?id=#{event.target_object.id}"
             )
             output text, prefix: prefix
           },
           follow: ->(target){
             prefix = target.name.to_s
             text = " from #{target.source.screen_name}"
-            @notifier.notify(
+            invoke(:notify,
               "#{prefix}#{text}",
-              handler: "twitter://user?id=#{target.source.id}"
+              "twitter://user?id=#{target.source.id}"
             )
             output text, prefix: prefix
           }
@@ -103,9 +97,9 @@ module Pekostream
       def reconnect
         self.stop
         if self.start
-          @notifier.notify "#{@screen_name}'s user stream reconnect is success"
+          invoke(:notify, "#{@screen_name}'s user stream reconnect is success")
         else
-          @notifier.notify "#{@screen_name}'s user stream reconnect is failed"
+          invoke(:notify, "#{@screen_name}'s user stream reconnect is failed")
         end
 
         @thread
