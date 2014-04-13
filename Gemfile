@@ -4,7 +4,7 @@ gem 'twitter'
 gem 'get-twitter-oauth-token'
 gem 'dotenv'
 gem 'im-kayac'
-gem 'octokit'
+gem 'octokit', '3.0.0'
 
 gem 'log_minimal'
 
