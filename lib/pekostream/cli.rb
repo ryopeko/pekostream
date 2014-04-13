@@ -43,6 +43,7 @@ module Pekostream
       github_stream = Pekostream::Stream::Github.new do |config|
         config.username     = @config.github['username']
         config.access_token = @config.github['access_token']
+        config.event(:notify, method(:notify))
       end
       github_stream.start
 

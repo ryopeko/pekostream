@@ -15,6 +15,7 @@ module Pekostream
           send(:"#{key}=", value)
         end
 
+        @hooks = {}
         yield self if block_given?
 
         @client = Octokit::Client.new access_token: @access_token
@@ -31,7 +32,7 @@ module Pekostream
           end
 
           payload   = event.payload
-          actor     = event.actor.login.colorlize
+          actor     = event.actor.login
           repo_name = event.repo.name
 
           text = case event.type.to_sym
@@ -79,7 +80,8 @@ module Pekostream
                    event.type
                  end
 
-          output "#{actor} #{text}"
+          invoke(:notify, "#{actor} #{text}")
+          output "#{actor.colorlize} #{text}"
         end
 
         @last_checked_at = Time.now
