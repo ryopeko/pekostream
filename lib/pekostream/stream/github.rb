@@ -44,6 +44,8 @@ module Pekostream
                    case payload.ref_type.to_sym
                    when :repository
                      "created repository #{repo_name} at #{created_at}"
+                   when :branch
+                     "created branch #{payload.ref} at #{repo_name} #{created_at}"
                    else
                      pp event
                      payload.ref_type
@@ -52,6 +54,8 @@ module Pekostream
                    "#{payload.action} issue #{repo_name}##{payload.issue.number}"
                  when :IssueCommentEvent
                    "commented on issue #{repo_name}##{payload.issue.number}"
+                 when :CommitCommentEvent
+                   "commented on commit #{repo_name}@#{payload.comment.commit_id}"
                  when :GistEvent
                    gist_id = payload.gist.id
 
