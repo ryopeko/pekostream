@@ -1,6 +1,7 @@
 require 'pekostream/configurable'
 require 'pekostream/stream/twitter'
 require 'pekostream/stream/github'
+require 'pekostream/stream/hatena_bookmark'
 require 'im-kayac'
 require 'optparse'
 
@@ -46,6 +47,12 @@ module Pekostream
         config.event(:notify, method(:notify))
       end
       github_stream.start
+
+      hatebu_stream = Pekostream::Stream::HatenaBookmark.new do |config|
+        config.feed_url = @config.hatebu['feed_url']
+        config.event(:notify, method(:notify))
+      end
+      hatebu_stream.start
 
       loop do
         twitter_streams.each do |stream|

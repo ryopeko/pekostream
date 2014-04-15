@@ -17,5 +17,9 @@ module Pekostream
     def imkayac
       @config['imkayac']
     end
+
+    def hatebu
+      @config['hatebu']
+    end
   end
 end
