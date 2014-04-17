@@ -11,12 +11,7 @@ module Pekostream
       attr_accessor :username, :access_token, :last_checked_at
 
       def initialize(options={})
-        options.each do |key, value|
-          send(:"#{key}=", value)
-        end
-
-        @hooks = {}
-        yield self if block_given?
+        super
 
         @client = Octokit::Client.new access_token: @access_token
         @last_checked_at ||= 60.minutes.ago

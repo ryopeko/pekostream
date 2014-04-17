@@ -1,5 +1,4 @@
 require 'rss'
-require 'pry'
 
 module Pekostream
   module Stream
@@ -9,13 +8,7 @@ module Pekostream
       @@stream_type = 'hatebu'
 
       def initialize(options={})
-        options.each do |key, value|
-          send(:"#{key}=", value)
-        end
-
-        @hooks = {}
-        yield self if block_given?
-
+        super
         @last_checked_at ||= 60.minutes.ago
       end
 

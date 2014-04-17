@@ -1,7 +1,16 @@
 module Pekostream
   module Stream
     class Base
+      def initialize(options={})
+        options.each do |key, value|
+          send(:"#{key}=", value)
+        end
+
+        yield self if block_given?
+      end
+
       def event(event, hook)
+        @hooks ||= {}
         (@hooks[event.to_sym] ||= []) << hook
       end
 
