@@ -8,7 +8,7 @@ module Pekostream
     class Github < Pekostream::Stream::Base
       @@stream_type = 'github'
 
-      attr_accessor :username, :access_token, :last_checked_at
+      attr_accessor :username, :access_token, :last_checked_at, :notify_event_types
 
       def initialize(options={})
         super
@@ -79,7 +79,7 @@ module Pekostream
                    event.type
                  end
 
-          invoke(:notify, "#{actor} #{text}")
+          invoke(:notify, "#{actor} #{text}") if @notify_event_types.include?(event.type.to_sym)
           output "#{actor.colorlize} #{text}"
         end
 
