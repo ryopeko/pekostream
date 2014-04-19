@@ -4,22 +4,9 @@ module Pekostream
   class Configurable
     def initialize(config:)
       @config = YAML.load_file(config)
-    end
-
-    def twitter
-      @config['twitter']
-    end
-
-    def github
-      @config['github']
-    end
-
-    def imkayac
-      @config['imkayac']
-    end
-
-    def hatebu
-      @config['hatebu']
+      @config.each do |k, v|
+        self.singleton_class.send(:define_method, k.to_sym, ->() { v })
+      end
     end
   end
 end
