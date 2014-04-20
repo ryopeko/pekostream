@@ -29,10 +29,6 @@ module Pekostream
             consumer_secret: @config.twitter['consumer_secret'],
             access_token:    user['access_token'],
             access_secret:   user['access_secret']
-          },
-          imkayac_config: {
-            username: @config.imkayac['username'],
-            secret: @config.imkayac['secret']
           }
         ).tap do |stream|
           stream.event(:notify, method(:notify))

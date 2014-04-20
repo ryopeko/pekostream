@@ -10,7 +10,7 @@ module Pekostream
       @@stream_type = 'twitter'
       TWEET_INTERVAL_THRESHOLD = 420
 
-      def initialize(screen_name:, notification_words:[], credentials:, imkayac_config:)
+      def initialize(screen_name:, notification_words:[], credentials:)
         @client = ::Twitter::Streaming::Client.new do |config|
           config.consumer_key        = credentials[:consumer_key]
           config.consumer_secret     = credentials[:consumer_secret]
