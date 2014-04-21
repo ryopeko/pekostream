@@ -1,4 +1,5 @@
 require 'twitter'
+require 'active_support/core_ext/object'
 require 'pekostream/filter/twitter'
 require 'pekostream/stream/base'
 
@@ -21,51 +22,51 @@ module Pekostream
         @screen_name = screen_name
         @last_received_at = Time.now
 
-        twitter_filter = Pekostream::Filter::Twitter.new(notification_words)
+        @twitter_filter = Pekostream::Filter::Twitter.new(notification_words)
+      end
 
-        @hooks = {
-          tweet: ->(tweet){
-            screen_name = tweet.user.screen_name
+      def tweet(tweet)
+        screen_name = tweet.user.screen_name
 
-            prefix = ''
-            if /^RT\s@#{@screen_name}/ =~ tweet.text
-              prefix = "Retweeted by "
-              invoke(:notify,
-                "#{prefix}@#{screen_name}: #{tweet.text}",
-                "twitter://status?id=#{tweet.id}"
+        prefix = ''
+        if /^RT\s@#{@screen_name}/ =~ tweet.text
+          prefix = "Retweeted by "
+          invoke(:notify,
+                 "#{prefix}@#{screen_name}: #{tweet.text}",
+                 "twitter://status?id=#{tweet.id}"
+                )
+        elsif @twitter_filter.filter(tweet.text)
+          prefix = "maybe mentioned from "
+          invoke(:notify,
+                 "#{prefix}@#{screen_name}: #{tweet.text}",
+                 "twitter://status?id=#{tweet.id}"
+                )
+        end
+
+        output "#{screen_name.colorlize}: #{tweet.text} #{tweet.created_at}", prefix: prefix
+
+        @last_received_at = tweet.created_at
+      end
+
+      def favorite(event)
+        return if event.source.screen_name == @screen_name
+        prefix = event.name.to_s
+        text = " from #{event.source.screen_name}: #{event.target_object.text}"
+        invoke(:notify,
+               "#{prefix}#{text}",
+               "twitter://status?id=#{event.target_object.id}"
               )
-            elsif twitter_filter.filter(tweet.text)
-              prefix = "maybe mentioned from "
-              invoke(:notify,
-                "#{prefix}@#{screen_name}: #{tweet.text}",
-                "twitter://status?id=#{tweet.id}"
+        output text, prefix: prefix
+      end
+
+      def follow(event)
+        prefix = event.name.to_s
+        text = " from #{event.source.screen_name}"
+        invoke(:notify,
+               "#{prefix}#{text}",
+               "twitter://user?id=#{event.source.id}"
               )
-            end
-
-            output "#{screen_name.colorlize}: #{tweet.text} #{tweet.created_at}", prefix: prefix
-
-            @last_received_at = tweet.created_at
-          },
-          favorite: ->(event){
-            return if event.source.screen_name == @screen_name
-            prefix = event.name.to_s
-            text = " from #{event.source.screen_name}: #{event.target_object.text}"
-            invoke(:notify,
-              "#{prefix}#{text}",
-              "twitter://status?id=#{event.target_object.id}"
-            )
-            output text, prefix: prefix
-          },
-          follow: ->(target){
-            prefix = target.name.to_s
-            text = " from #{target.source.screen_name}"
-            invoke(:notify,
-              "#{prefix}#{text}",
-              "twitter://user?id=#{target.source.id}"
-            )
-            output text, prefix: prefix
-          }
-        }
+        output text, prefix: prefix
       end
 
       def start
@@ -73,11 +74,9 @@ module Pekostream
           @client.user do |object|
             case object
             when ::Twitter::Tweet
-              @hooks[:tweet].call(object)
+              tweet(object)
             when ::Twitter::Streaming::Event
-              unless @hooks[object.name].nil?
-                @hooks[object.name].call(object)
-              end
+              try(object.name.to_sym, object)
             end
           end
         end
