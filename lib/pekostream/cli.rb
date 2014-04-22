@@ -21,17 +21,16 @@ module Pekostream
 
     def run
       twitter_streams = @config.twitter['users'].map do |user|
-        twitter_stream = Pekostream::Stream::Twitter.new(
-          screen_name: user['screen_name'],
-          notification_words: user['notification_words'],
-          credentials: {
-            consumer_key:    @config.twitter['consumer_key'],
-            consumer_secret: @config.twitter['consumer_secret'],
-            access_token:    user['access_token'],
-            access_secret:   user['access_secret']
+        twitter_stream = Pekostream::Stream::Twitter.new do |config|
+          config.screen_name = user['screen_name']
+          config.credentials = {
+            consumer_key:          @config.twitter['consumer_key'],
+            consumer_secret:       @config.twitter['consumer_secret'],
+            access_token:          user['access_token'],
+            access_token_secret:   user['access_secret']
           }
-        ).tap do |stream|
-          stream.event(:notify, method(:notify))
+          config.notification_words = user['notification_words']
+          config.event(:notify, method(:notify))
         end
       end
 

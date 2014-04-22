@@ -6,22 +6,16 @@ require 'pekostream/stream/base'
 module Pekostream
   module Stream
     class Twitter < Pekostream::Stream::Base
-      attr_reader :screen_name
+      attr_accessor :screen_name, :credentials, :notification_words
 
       @@stream_type = 'twitter'
       TWEET_INTERVAL_THRESHOLD = 420
 
-      def initialize(screen_name:, notification_words:[], credentials:)
-        @client = ::Twitter::Streaming::Client.new do |config|
-          config.consumer_key        = credentials[:consumer_key]
-          config.consumer_secret     = credentials[:consumer_secret]
-          config.access_token        = credentials[:access_token]
-          config.access_token_secret = credentials[:access_secret]
-        end
+      def initialize(options={})
+        super
+        @client = ::Twitter::Streaming::Client.new(credentials)
 
-        @screen_name = screen_name
         @last_received_at = Time.now
-
         @twitter_filter = Pekostream::Filter::Twitter.new(notification_words)
       end
 
