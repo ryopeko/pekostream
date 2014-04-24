@@ -1,3 +1,5 @@
+require "pekostream/core_ext/string"
+
 module Pekostream
   module Stream
     class Base
