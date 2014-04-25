@@ -16,7 +16,7 @@ describe Pekostream::Stream::Twitter do
   }
 
   describe "#favorite" do
-    it 'called #invoke' do
+    it 'should call #invoke' do
       expect(subject).to receive(:invoke)
       subject.favorite(::Twitter::Streaming::Event.new(
         event: 'favorite',
