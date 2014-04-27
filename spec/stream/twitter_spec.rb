@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'pekostream/stream/twitter'
 require 'twitter'
 
