@@ -5,6 +5,7 @@ require 'twitter'
 describe Pekostream::Stream::Twitter do
   before do
     @me = 'ryopeko'
+    Pekostream::Stream::Twitter.any_instance.stub(:output).and_return('')
   end
 
   subject {
