@@ -1,6 +1,8 @@
 require 'spec_helper'
 require 'pekostream/stream/twitter'
 require 'twitter'
+require 'active_support/core_ext/time'
+require 'active_support/core_ext/numeric'
 
 describe Pekostream::Stream::Twitter do
   before do
@@ -98,6 +100,30 @@ describe Pekostream::Stream::Twitter do
       it "should call #invoke" do
         expect(subject).to receive(:invoke)
         subject.tweet(::Twitter::Tweet.new(@tweet_data.merge(:text=>"RT @ryopeko_retro: hogehoge")))
+      end
+    end
+  end
+
+  describe "#alive?" do
+    context "when last received at" do
+      context "later than threshold" do
+        around do |example|
+          Timecop.travel(Time.now.since(Pekostream::Stream::Twitter::TWEET_INTERVAL_THRESHOLD.second)) do
+            example.run
+          end
+        end
+
+        it { expect(subject.alive?).to be_true }
+      end
+
+      context "more than threshold" do
+        around do |example|
+          Timecop.travel(Time.now.since((Pekostream::Stream::Twitter::TWEET_INTERVAL_THRESHOLD + 1).second)) do
+            example.run
+          end
+        end
+
+        it { expect(subject.alive?).to be_false }
       end
     end
   end
