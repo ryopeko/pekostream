@@ -106,24 +106,28 @@ describe Pekostream::Stream::Twitter do
 
   describe "#alive?" do
     context "when last received at" do
+      before do
+        @twitter = subject
+      end
+
+      after(:each) do
+        Timecop.return
+      end
+
       context "later than threshold" do
-        around do |example|
-          Timecop.travel(Time.now.since(Pekostream::Stream::Twitter::TWEET_INTERVAL_THRESHOLD.second)) do
-            example.run
-          end
+        before do
+          Timecop.freeze(Time.now.since((Pekostream::Stream::Twitter::TWEET_INTERVAL_THRESHOLD - 1).second))
         end
 
-        it { expect(subject.alive?).to be_true }
+        it { expect(@twitter.alive?).to be_true }
       end
 
       context "more than threshold" do
-        around do |example|
-          Timecop.travel(Time.now.since((Pekostream::Stream::Twitter::TWEET_INTERVAL_THRESHOLD + 1).second)) do
-            example.run
-          end
+        before do
+          Timecop.freeze(Time.now.since((Pekostream::Stream::Twitter::TWEET_INTERVAL_THRESHOLD).second))
         end
 
-        it { expect(subject.alive?).to be_false }
+        it { expect(@twitter.alive?).to be_false }
       end
     end
   end
