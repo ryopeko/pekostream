@@ -7,6 +7,7 @@ require 'active_support/core_ext/numeric'
 describe Pekostream::Stream::Twitter do
   before do
     @me = 'ryopeko'
+    @filter_word = 'filter'
     Pekostream::Stream::Twitter.any_instance.stub(:output).and_return('')
   end
 
@@ -19,7 +20,7 @@ describe Pekostream::Stream::Twitter do
         access_token:        'access_token',
         access_token_secret: 'access_token_secret'
       }
-      config.notification_words = []
+      config.notification_words = [@filter_word]
     end
   }
 
@@ -89,6 +90,7 @@ describe Pekostream::Stream::Twitter do
         :retweeted=>false
       }
     end
+
     context "when normal text" do
       it "should not call #invoke" do
         expect(subject).to receive(:invoke).exactly(0).times
@@ -96,10 +98,17 @@ describe Pekostream::Stream::Twitter do
       end
     end
 
-    context "when text included of RT" do
+    context "when text included of rt" do
       it "should call #invoke" do
         expect(subject).to receive(:invoke)
         subject.tweet(::Twitter::Tweet.new(@tweet_data.merge(:text=>"RT @ryopeko_retro: hogehoge")))
+      end
+    end
+
+    context "when text included of filter word" do
+      it "should call #invoke" do
+        expect(subject).to receive(:invoke)
+        subject.tweet(::Twitter::Tweet.new(@tweet_data.merge(:text=>@filter_word)))
       end
     end
   end
