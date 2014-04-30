@@ -75,19 +75,19 @@ describe Pekostream::Stream::Twitter do
   describe "#tweet" do
     before do
       @tweet_data = {
-        :created_at=>"Sat Apr 26 13:48:14 +0000 2014",
-        :id=>460052735073611776,
-        :id_str=>"460052735073611776",
-        :text=>"提督各位大変そう...",
-        :source=>"<a href=\"http://sites.google.com/site/yorufukurou/\" rel=\"nofollow\">YoruFukurou</a>",
-        :user=> {
-          :id=>15562743,
-          :id_str=>"15562743",
-          :name=>"新卒ふなっしー",
-          :screen_name=>"ryopeko",
+        created_at: "Sat Apr 26 13:48:14 +0000 2014",
+        id: 460052735073611776,
+        id_str: "460052735073611776",
+        text: "提督各位大変そう...",
+        source: "<a href=\"http://sites.google.com/site/yorufukurou/\" rel=\"nofollow\">YoruFukurou</a>",
+        user: {
+          id: 15562743,
+          id_str: "15562743",
+          name: "新卒ふなっしー",
+          screen_name: "ryopeko",
         },
-        :favorited=>false,
-        :retweeted=>false
+        favorited: false,
+        retweeted: false
       }
     end
 
@@ -101,14 +101,14 @@ describe Pekostream::Stream::Twitter do
     context "when text included of rt" do
       it "should call #invoke" do
         expect(subject).to receive(:invoke)
-        subject.tweet(::Twitter::Tweet.new(@tweet_data.merge(:text=>"RT @ryopeko_retro: hogehoge")))
+        subject.tweet(::Twitter::Tweet.new(@tweet_data.merge(text: "RT @ryopeko_retro: hogehoge")))
       end
     end
 
     context "when text included of filter word" do
       it "should call #invoke" do
         expect(subject).to receive(:invoke)
-        subject.tweet(::Twitter::Tweet.new(@tweet_data.merge(:text=>@filter_word)))
+        subject.tweet(::Twitter::Tweet.new(@tweet_data.merge(text: @filter_word)))
       end
     end
   end
