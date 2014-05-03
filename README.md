@@ -1,6 +1,7 @@
 # Pekostream
 
-TODO: Write a gem description
+[![wercker status](https://app.wercker.com/status/1b51de46bbc0d1069ea08647aee0a76a/s/ "wercker status")](https://app.wercker.com/project/bykey/1b51de46bbc0d1069ea08647aee0a76a)
+
 
 ## Installation
 
