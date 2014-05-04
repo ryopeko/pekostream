@@ -2,10 +2,6 @@
 
 require 'pekostream'
 require 'pekostream/cli'
-require 'log_minimal'
-
-include LogMinimal::Methods
-LogMinimal::Configuration.path = $stdout
 
 Pekostream::CLI.new(ARGV).run
 
