@@ -10,6 +10,8 @@ gem 'activesupport'
 gem 'activerecord'
 gem 'pg'
 
+gem 'sidekiq'
+
 group :development do
   gem 'pry'
 end

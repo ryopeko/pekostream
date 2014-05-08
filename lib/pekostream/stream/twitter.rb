@@ -2,7 +2,7 @@ require 'twitter'
 require 'active_support/core_ext/object'
 require 'pekostream/filter/twitter'
 require 'pekostream/stream/base'
-require 'pekostream/recorder/twitter/tweet'
+require 'pekostream/worker/tweet_worker'
 
 module Pekostream
   module Stream
@@ -38,12 +38,11 @@ module Pekostream
                 )
         end
 
-        tweet_recorder = Pekostream::Recorder::Twitter::Tweet.new(
-          tweet_id: tweet.id,
-          tweet_text: tweet.text,
-          screen_name: tweet.user.screen_name,
-          created_at: tweet.created_at,
-          updated_at: tweet.created_at
+        TweetWorker.perform_async(
+          tweet.id,
+          tweet.text,
+          tweet.user.screen_name,
+          tweet.created_at
         )
 
         output "#{screen_name.colorlize}: #{tweet.text} #{tweet.created_at}", prefix: prefix
