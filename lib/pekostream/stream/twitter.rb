@@ -42,6 +42,7 @@ module Pekostream
           tweet.id,
           tweet.text,
           tweet.user.screen_name,
+          tweet.in_reply_to_status_id,
           tweet.created_at
         )
 
