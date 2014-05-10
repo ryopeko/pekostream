@@ -1,8 +1,8 @@
 require 'twitter'
+require 'sidekiq'
 require 'active_support/core_ext/object'
 require 'pekostream/filter/twitter'
 require 'pekostream/stream/base'
-require 'pekostream/worker/tweet_worker'
 
 module Pekostream
   module Stream
@@ -38,12 +38,15 @@ module Pekostream
                 )
         end
 
-        TweetWorker.perform_async(
-          tweet.id,
-          tweet.text,
-          tweet.user.screen_name,
-          tweet.in_reply_to_status_id,
-          tweet.created_at
+        Sidekiq::Client.push(
+          'class' => 'TweetWorker',
+          'args' => [
+            tweet.id,
+            tweet.text,
+            tweet.user.screen_name,
+            tweet.in_reply_to_status_id,
+            tweet.created_at
+          ]
         )
 
         output "#{screen_name.colorlize}: #{tweet.text} #{tweet.created_at}", prefix: prefix
