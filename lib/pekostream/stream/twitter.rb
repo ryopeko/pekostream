@@ -75,6 +75,13 @@ module Pekostream
         output text, prefix: prefix
       end
 
+      def deleted_tweet(deleted)
+        Sidekiq::Client.push(
+          'class' => 'DeletedTweetWorker',
+          'args' => [deleted.id]
+        )
+      end
+
       def start
         @thread = Thread.new do
           @client.user do |object|
@@ -83,6 +90,8 @@ module Pekostream
               tweet(object)
             when ::Twitter::Streaming::Event
               try(object.name.to_sym, object)
+            when ::Twitter::Streaming::DeletedTweet
+              deleted_tweet(object)
             end
           end
         end
