@@ -56,12 +56,25 @@ module Pekostream
 
       def favorite(event)
         return if event.source.screen_name == @screen_name
+
         prefix = event.name.to_s
         text = " from #{event.source.screen_name}: #{event.target_object.text}"
         invoke(:notify,
                "#{prefix}#{text}",
                "twitter://status?id=#{event.target_object.id}"
               )
+
+        Sidekiq::Client.push(
+          'class' => 'ActivityWorker',
+          'args' => [{
+            actor_screen_name: event.source.screen_name,
+            source_service_name: 'Twitter',
+            source_type: 'favorite',
+            description: "#{prefix}#{text}",
+            permalink: "https://twitter.com/#{event.target_object.user.name}/status/#{event.target_object.id}"
+          }]
+        )
+
         output text, prefix: prefix
       end
 
