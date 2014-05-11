@@ -1,5 +1,4 @@
 require 'twitter'
-require 'sidekiq'
 require 'active_support/core_ext/object'
 require 'pekostream/filter/twitter'
 require 'pekostream/stream/base'
