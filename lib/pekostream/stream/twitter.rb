@@ -70,7 +70,7 @@ module Pekostream
             source_service_name: 'Twitter',
             source_type: 'favorite',
             description: "#{prefix}#{text}",
-            permalink: "https://twitter.com/#{event.target_object.user.name}/status/#{event.target_object.id}"
+            permalink: "https://twitter.com/#{event.target_object.user.screen_name}/status/#{event.target_object.id}"
           }]
         )
 
