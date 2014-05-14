@@ -79,7 +79,21 @@ module Pekostream
                    event.type
                  end
 
-          invoke(:notify, "#{actor} #{text}") if @notify_event_types.include?(event.type.to_sym)
+          if @notify_event_types.include?(event.type.to_sym)
+            invoke(:notify, "#{actor} #{text}")
+
+            Sidekiq::Client.push(
+              'class' => 'ActivityWorker',
+              'args' => [{
+                actor_screen_name: actor,
+                source_service_name: 'github',
+                source_type: event.type,
+                description: text,
+                created_at: created_at
+              }]
+            )
+          end
+
           output "#{actor.colorlize} #{text}"
         end
 
