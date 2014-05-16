@@ -27,7 +27,7 @@ module Pekostream
               actor_screen_name: item.dc_creator,
               source_service_name: 'Hatena::Bookmark',
               source_type: 'hatebu',
-              description: "hatebed #{item.title}",
+              description: item.title,
               permalink: item.link
             }]
           )
