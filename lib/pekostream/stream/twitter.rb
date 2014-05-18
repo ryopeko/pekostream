@@ -90,7 +90,8 @@ module Pekostream
       def deleted_tweet(deleted)
         Sidekiq::Client.push(
           'class' => 'DeletedTweetWorker',
-          'args' => [deleted.id]
+          'args' => [deleted.id],
+          'retry' => 2
         )
       end
 
