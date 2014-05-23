@@ -63,17 +63,6 @@ module Pekostream
                "twitter://status?id=#{event.target_object.id}"
               )
 
-        Sidekiq::Client.push(
-          'class' => 'ActivityWorker',
-          'args' => [{
-            actor_screen_name: event.source.screen_name,
-            source_service_name: 'Twitter',
-            source_type: 'favorite',
-            description: "#{prefix}#{text}",
-            permalink: "https://twitter.com/#{event.target_object.user.screen_name}/status/#{event.target_object.id}"
-          }]
-        )
-
         output text, prefix: prefix
       end
 
