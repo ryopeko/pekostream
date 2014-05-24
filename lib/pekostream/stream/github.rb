@@ -89,6 +89,7 @@ module Pekostream
                 source_service_name: 'github',
                 source_type: event.type,
                 description: text,
+                permalink: "https://github.com#{repo_name}",
                 created_at: created_at
               }]
             )
