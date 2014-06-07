@@ -88,7 +88,7 @@ module Pekostream
                 actor_screen_name: actor,
                 source_service_name: 'github',
                 source_type: event.type,
-                description: text.gusb(/\sat#{created_at}/, ''),
+                description: text.gsub(/\sat#{created_at}/, ''),
                 permalink: "https://github.com#{repo_name}",
                 created_at: created_at
               }]
