@@ -8,7 +8,7 @@ describe Pekostream::Stream::Twitter do
   before do
     @me = 'ryopeko'
     @filter_word = 'filter'
-    Pekostream::Stream::Twitter.any_instance.stub(:output).and_return('')
+    allow_any_instance_of(Pekostream::Stream::Twitter).to receive(:output).and_return('')
   end
 
   subject {
@@ -128,7 +128,7 @@ describe Pekostream::Stream::Twitter do
           Timecop.freeze(Time.now.since((Pekostream::Stream::Twitter::TWEET_INTERVAL_THRESHOLD - 1).second))
         end
 
-        it { expect(@twitter.alive?).to be_true }
+        it { expect(@twitter.alive?).to be true }
       end
 
       context "more than threshold" do
@@ -136,7 +136,7 @@ describe Pekostream::Stream::Twitter do
           Timecop.freeze(Time.now.since((Pekostream::Stream::Twitter::TWEET_INTERVAL_THRESHOLD).second))
         end
 
-        it { expect(@twitter.alive?).to be_false }
+        it { expect(@twitter.alive?).to be false }
       end
     end
   end
