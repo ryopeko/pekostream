@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'pekostream/stream/twitter'
 require 'twitter'
+require 'active_support'
 require 'active_support/core_ext/time'
 require 'active_support/core_ext/numeric'
 
