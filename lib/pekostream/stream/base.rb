@@ -1,4 +1,5 @@
 require "pekostream/core_ext/string"
+require 'logger'
 
 module Pekostream
   module Stream
@@ -7,6 +8,8 @@ module Pekostream
         options.each do |key, value|
           send(:"#{key}=", value)
         end
+
+        @logger = Logger.new(STDOUT)
 
         yield self if block_given?
       end
@@ -23,7 +26,7 @@ module Pekostream
       end
 
       private def output(type, text)
-        puts "[#{type.colorlize}] #{text}"
+        @logger.info "[#{type.colorlize}] #{text}"
       end
     end
   end
