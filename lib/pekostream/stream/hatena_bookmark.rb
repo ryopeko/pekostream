@@ -21,17 +21,6 @@ module Pekostream
             break
           end
 
-          Sidekiq::Client.push(
-            'class' => 'ActivityWorker',
-            'args' => [{
-              actor_screen_name: item.dc_creator,
-              source_service_name: 'Hatena::Bookmark',
-              source_type: @@stream_type,
-              description: item.title,
-              permalink: item.link
-            }]
-          )
-
           invoke(:notify, "#{item.dc_creator} hatebed #{item.title}", item.link.gsub(/^http/, 'googlechrome'))
           output "hatebed #{item.title} (#{item.link}) at #{item.dc_date}", prefix: item.dc_creator
         end

@@ -37,17 +37,6 @@ module Pekostream
                 )
         end
 
-        Sidekiq::Client.push(
-          'class' => 'TweetWorker',
-          'args' => [
-            tweet.id,
-            tweet.text,
-            tweet.user.screen_name,
-            tweet.in_reply_to_status_id,
-            tweet.created_at
-          ]
-        )
-
         output "#{screen_name.colorlize}: #{tweet.text} #{tweet.created_at}", prefix: prefix
 
         @last_received_at = tweet.created_at
@@ -77,11 +66,6 @@ module Pekostream
       end
 
       def deleted_tweet(deleted)
-        Sidekiq::Client.push(
-          'class' => 'DeletedTweetWorker',
-          'args' => [deleted.id],
-          'retry' => 2
-        )
       end
 
       def start

@@ -1,4 +1,3 @@
-require 'sidekiq'
 require "pekostream/core_ext/string"
 
 module Pekostream
