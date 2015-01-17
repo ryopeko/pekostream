@@ -43,7 +43,6 @@ module Pekostream
                    when :branch
                      "created branch #{payload.ref} at #{repo_name} #{created_at}"
                    else
-                     pp event
                      payload.ref_type
                    end
                  when :IssuesEvent
@@ -61,7 +60,6 @@ module Pekostream
                    when :update
                      "updated gist #{gist_id} at #{created_at}"
                    else
-                     pp event
                      payload.action
                    end
                  when :MemberEvent
@@ -76,7 +74,6 @@ module Pekostream
                  when :DeleteEvent
                    "deleted #{payload.ref_type} #{payload.ref} #{repo_name} at #{created_at}"
                  else
-                   pp event
                    event.type
                  end
 
