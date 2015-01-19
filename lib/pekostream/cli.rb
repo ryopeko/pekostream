@@ -40,6 +40,7 @@ module Pekostream
         config.username     = @config.github['username']
         config.access_token = @config.github['access_token']
         config.notify_event_types = [ :WatchEvent, :PushEvent ]
+        config.interval = 300
         config.event(:notify, method(:notify))
       end
       github_stream.start

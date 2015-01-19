@@ -9,13 +9,14 @@ module Pekostream
     class Github < Pekostream::Stream::Base
       @@stream_type = 'github'
 
-      attr_accessor :username, :access_token, :last_checked_at, :notify_event_types
+      attr_accessor :username, :access_token, :last_checked_at, :notify_event_types, :interval
 
       def initialize(options={})
         super
 
         @client = Octokit::Client.new access_token: @access_token
         @last_checked_at ||= 60.minutes.ago
+        @interval ||= 600
       end
 
       def run
@@ -91,7 +92,7 @@ module Pekostream
         @thread = Thread.new do
           loop do
             self.run
-            sleep 600
+            sleep @interval
           end
         end
       end
