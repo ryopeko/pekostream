@@ -3,13 +3,14 @@ require 'rss'
 module Pekostream
   module Stream
     class HatenaBookmark < Pekostream::Stream::Base
-      attr_accessor :feed_url
+      attr_accessor :feed_url, :interval
 
       @@stream_type = 'hatebu'
 
       def initialize(options={})
         super
         @last_checked_at ||= 60.minutes.ago
+        @interval ||= 300
       end
 
       def run
@@ -31,7 +32,7 @@ module Pekostream
         @thread = Thread.new do
           loop do
             self.run
-            sleep 300
+            sleep @interval
           end
         end
       end
