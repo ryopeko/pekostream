@@ -47,6 +47,7 @@ module Pekostream
 
       hatebu_stream = Pekostream::Stream::HatenaBookmark.new do |config|
         config.feed_url = @config.hatebu['feed_url']
+        config.interval = @config.hatebu['fetch_interval']
         config.event(:notify, method(:notify))
       end
       hatebu_stream.start
