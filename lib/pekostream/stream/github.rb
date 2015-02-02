@@ -1,7 +1,6 @@
 require 'active_support'
 require 'active_support/core_ext'
 require 'octokit'
-require 'pp'
 require 'pekostream/stream/base'
 
 module Pekostream
