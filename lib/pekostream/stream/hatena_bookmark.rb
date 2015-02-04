@@ -3,7 +3,7 @@ require 'rss'
 module Pekostream
   module Stream
     class HatenaBookmark < Pekostream::Stream::Base
-      attr_accessor :feed_url, :interval
+      attr_accessor :feed_url, :interval, :timezone
 
       @@stream_type = 'hatebu'
 
@@ -11,11 +11,12 @@ module Pekostream
         super
         @last_checked_at ||= 60.minutes.ago
         @interval ||= 300
+        @timezone ||= 'Asia/Tokyo'
       end
 
       def run
         RSS::Parser.parse(feed_url).items.each do |item|
-          posted_at = item.dc_date.in_time_zone('Asia/Tokyo')
+          posted_at = item.dc_date.in_time_zone(@timezone)
 
           if posted_at < @last_checked_at
             output('skipped..')
